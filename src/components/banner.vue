@@ -19,7 +19,6 @@
     margin:0px;
     padding:0px;
 
-    position:relative;
     display:flex;
     justify-content: center;
     align-items: center;

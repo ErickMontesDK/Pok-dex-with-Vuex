@@ -1,12 +1,16 @@
 <template>
-  <banner/>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
-
-  <footers/>
+  <div class="full container-fluid">
+    <banner/>
+    <div class="main container-fluid">
+      <nav>
+        <router-link to="/">Home</router-link> |
+        <router-link to="/about">About</router-link>
+      </nav>
+      <router-view/>
+    </div>
+    
+    <footers/>
+  </div>
 </template>
 
 <script>
@@ -22,6 +26,30 @@ export default{
 </script>
 
 <style>
+.full{
+  position:absolute;
+  background-color: #42b983;
+  min-height: 100%;
+  min-width: 100%;
+  padding: 0px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.main{
+  position:relative;
+  background-color: aqua ;
+  
+}
+.banner{
+  /* position:absolute;
+  top:0px; */
+}
+.footer{
+  /* position:absolute;
+  bottom:0px; */
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -42,8 +70,8 @@ nav a {
 nav a.router-link-exact-active {
   color: #42b983;
 }
-
-footer{
-  bottom: 0px;
+router-view{
 }
+
+
 </style>

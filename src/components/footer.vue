@@ -17,14 +17,12 @@
 <style scoped>
 
 .footer{
-    background-color:var(--color-black); ;
+    background-color:rgba(00, 00, 00, .2); ;
     height: 170px;
 
     margin:0px;
     padding:2em 3em 2em 3em;
 
-    position:absolute;
-    bottom: 0px;
     display:flex;
     justify-content:space-between;
     align-items:flex-start;

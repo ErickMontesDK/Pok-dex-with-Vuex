@@ -7,19 +7,19 @@ export default createStore({
   getters: {
   },
   mutations: {
-    async info(state,data){
-      const info=await data;
-      state.pokemonBasicInfo=info;
+    async basicInfo(state,data){
+      state.pokemonBasicInfo=await data;
     }
 
   },
   actions: {
-    async fetchUrl({commit},url) {
+    async fetchUrl(webos,url) {
       const response = await fetch(url);
+      console.log(response.status);
         if (response.status != 200) {
-          commit('info',{code:"Error"})
+          return({code:"Error"})
         } else {
-          commit('info',response.json());
+          return(response.json());
         }
     }
 
