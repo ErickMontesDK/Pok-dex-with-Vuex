@@ -6,15 +6,15 @@
     <input v-model="pokemon" type="text" placeholder="Nombre o número de pókemon">
     <button @click="getInfo">sss</button>
   </div>
-  <span>Pokemon name: {{pokemon}}</span><br>
-  <span>Number: {{$store.state.pokemonBasicInfo.id}}</span><br>
+  <span>Pokemon name: {{info.name}}</span><br>
+  <span>Number: {{info.id}}</span><br>
   <span>Types:
-    <li v-for="typePok in $store.state.pokemonBasicInfo.types">
-      {{typePok.type.name}}
+    <li v-for="typeOf in info.types">
+      {{typeOf}}
     </li>
   </span>
-  <span>Height: {{$store.state.pokemonBasicInfo.height/10}} m</span><br>
-  <span>Weight: {{$store.state.pokemonBasicInfo.weight}} kg</span><br>
+  <span>Height: {{info.height}} m</span><br>
+  <span>Weight: {{info.weight}} kg</span><br>
   <span>
     stats:
     <li v-for="stat in $store.state.pokemonBasicInfo.stats">
@@ -48,7 +48,7 @@ export default {
   data(){
     return {
       pokemon:"jolteon",
-      entry:"",
+      info:{},
     }  
   },
   methods:{
@@ -57,18 +57,11 @@ export default {
   computed:{
     async getInfo(){
       let urlPokemon=`https://pokeapi.co/api/v2/pokemon/${this.pokemon}`;
-      
-      console.log(urlPokemon);
-      const basicInfoPok= await this.$store.dispatch('fetchUrl',urlPokemon);
-      const speciesUrl= basicInfoPok.species.url;
+      this.$store.dispatch('fetchUrl',urlPokemon);
 
-      this.$store.commit('basicInfo',basicInfoPok);
-      const speciesInfoPok= await this.$store.dispatch('fetchUrl',speciesUrl);
-      this.$store.commit('speciesInfo',speciesInfoPok);
-
-      const entry= await this.$store.getters.valorEnEspañol;
-      this.entry=entry;
-
+      const info=await this.$store.getters.basicInfo
+      console.log(info);
+      this.info=await info;
     },
   }
 }
