@@ -21,7 +21,17 @@
     {{stat.stat.name}}--> {{stat.base_stat}}
     </li>
   </span>
-
+  <span>Habitat: {{$store.state.pokemonSpecies.habitat}} </span><br>
+  <span>Variaciones: 
+    <li v-for="variation in $store.state.pokemonSpecies.varieties">
+      {{variation.pokemon.name}}-->{{variation.pokemon.url}}
+    </li>  
+  </span><br>
+  <!-- <span>Entry: {{$store.state.pokemonSpecies.flavor_text_entries}} </span><br> -->
+  <!-- <span>Nickname: {{$store.state.pokemonSpecies.genera[5].genus}} </span><br> -->
+  {{entry}}
+  
+  
 </template>
 
 <script>
@@ -38,8 +48,11 @@ export default {
   data(){
     return {
       pokemon:"jolteon",
-
+      entry:"",
     }  
+  },
+  methods:{
+    
   },
   computed:{
     async getInfo(){
@@ -47,9 +60,16 @@ export default {
       
       console.log(urlPokemon);
       const basicInfoPok= await this.$store.dispatch('fetchUrl',urlPokemon);
+      const speciesUrl= basicInfoPok.species.url;
 
       this.$store.commit('basicInfo',basicInfoPok);
-    }
+      const speciesInfoPok= await this.$store.dispatch('fetchUrl',speciesUrl);
+      this.$store.commit('speciesInfo',speciesInfoPok);
+
+      const entry= await this.$store.getters.valorEnEspañol;
+      this.entry=entry;
+
+    },
   }
 }
 </script>
