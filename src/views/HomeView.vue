@@ -6,31 +6,34 @@
     <input v-model="pokemon" type="text" placeholder="Nombre o número de pókemon">
     <button @click="getInfo">sss</button>
   </div>
-  <span>Pokemon name: {{info.name}}</span><br>
-  <span>Number: {{info.id}}</span><br>
+  <span>Pokemon name: {{$store.getters.basicInfo.name}}</span><br>
+  <span>Number: {{$store.getters.basicInfo.id}}</span><br>
   <span>Types:
-    <li v-for="typeOf in info.types">
-      {{typeOf}}
+    <li v-for="typeOf in $store.getters.basicInfo.types">
+      {{typeOf.type.name}}
     </li>
   </span>
-  <span>Height: {{info.height}} m</span><br>
-  <span>Weight: {{info.weight}} kg</span><br>
+  <span>Height: {{$store.getters.basicInfo.height/10}} m</span><br>
+  <span>Weight: {{$store.getters.basicInfo.weight/10}} kg</span><br>
   <span>
     stats:
-    <li v-for="stat in $store.state.pokemonBasicInfo.stats">
+    <li v-for="stat in $store.getters.basicInfo.stats">
     {{stat.stat.name}}--> {{stat.base_stat}}
     </li>
   </span>
-  <span>Habitat: {{$store.state.pokemonSpecies.habitat}} </span><br>
+  <span v-if="$store.getters.speciesInfo.habitat">Habitat: {{$store.getters.speciesInfo.habitat.name}} </span><br>
   <span>Variaciones: 
-    <li v-for="variation in $store.state.pokemonSpecies.varieties">
+    <li v-for="variation in $store.getters.speciesInfo.varieties">
       {{variation.pokemon.name}}-->{{variation.pokemon.url}}
     </li>  
+
   </span><br>
-  <!-- <span>Entry: {{$store.state.pokemonSpecies.flavor_text_entries}} </span><br> -->
-  <!-- <span>Nickname: {{$store.state.pokemonSpecies.genera[5].genus}} </span><br> -->
-  {{entry}}
-  
+  <span>Entry: {{$store.getters.entryEsp}} </span><br>
+  <span>Nickname: {{$store.getters.nicknameEsp}} </span><br>
+  <span>Regíon: {{$store.getters.regionInfo}} </span><br>
+  <li v-for="evol in $store.getters.evolutionChain">
+      <span v-for="variant in evol"><span>{{variant}} </span><br></span>
+    </li> 
   
 </template>
 
@@ -47,22 +50,21 @@ export default {
   },
   data(){
     return {
-      pokemon:"jolteon",
-      info:{},
+      pokemon:"charmander",
+      infos:{},
     }  
   },
   methods:{
-    
-  },
-  computed:{
-    async getInfo(){
+    getInfo(){
       let urlPokemon=`https://pokeapi.co/api/v2/pokemon/${this.pokemon}`;
       this.$store.dispatch('fetchUrl',urlPokemon);
 
-      const info=await this.$store.getters.basicInfo
-      console.log(info);
-      this.info=await info;
+      
     },
+    
+  },
+  computed:{
+     
   }
 }
 </script>

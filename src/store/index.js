@@ -4,24 +4,65 @@ export default createStore({
   state: {
     pokemonBasicInfo:{},
     pokemonSpecies:{},
-    pokemonEvolutions:{}
+    pokemonEvolutions:{},
+    pokemonRegion:"",
   },
   getters: {
-    async basicInfo(state){
-      const info= await state.pokemonBasicInfo;
-      const basic={
-        name: info.name,
-        id: info.id,
-        height: info.height/10,
-        weight: info.weight/10,
-        types:[],
-        stats: info.stats,
+    basicInfo(state){
+      return state.pokemonBasicInfo;
+    },
+    speciesInfo(state){
+      return state.pokemonSpecies;
+    },
+    regionInfo(state){
+      return state.pokemonRegion;
+    },
+    entryEsp(state){
+      const lengthSpecies=Object.keys(state.pokemonSpecies).length;
+      if (lengthSpecies==0){
+        return 'Pókemon no encontrado'
+
+      }else{
+        const entryList=state.pokemonSpecies.flavor_text_entries;
+        const entrysInEsp=entryList.filter((entry) => entry.language.name=="es");
+        
+        return entrysInEsp[0].flavor_text;
       }
-      const types=await state.pokemonBasicInfo.types
-      types.forEach((type)=>{basic.types.push(type.type.name)})
-      
-      return basic; 
-    }
+    },
+    nicknameEsp(state){
+      const lengthSpecies=Object.keys(state.pokemonSpecies).length;
+      if (lengthSpecies==0){
+        return 'Pókemon no encontrado'
+      }else{
+        const nickList=state.pokemonSpecies.genera;
+        const nickInEsp=nickList.filter((entry) => entry.language.name=="es");
+        
+        return nickInEsp[0].genus;
+      }
+    },
+    evolutionChain(state){
+      const Evolutions=[];
+
+      const sendEvolutions=function(route){
+        if(route.length !=0){
+          const Variations=route.map((variation)=>variation.species.name);
+          console.log(Variations);
+          Evolutions.push(Variations);
+          sendEvolutions(route[0].evolves_to);
+        }
+      };
+
+      const lengthSpecies=Object.keys(state.pokemonEvolutions).length;
+      if (lengthSpecies==0){
+        return []
+      }else{
+        const evolInfo=state.pokemonEvolutions.chain;
+        Evolutions.push([evolInfo.species.name]);
+        
+        sendEvolutions(evolInfo.evolves_to);
+      }
+      return Evolutions;
+    },
   },
   mutations: {
     async basicInfo(state,data){
@@ -32,11 +73,13 @@ export default createStore({
     },
     async evolutionInfo(state,data){
       state.pokemonEvolutions=await data;
+    },
+    async region(state,data){
+      state.pokemonRegion=await data;
     }
-
   },
   actions: {
-    fetchUrl({commit},url) {
+    fetchUrl({commit,state},url) {
       fetch(url).then((response) => {
         return response.json();
 
@@ -56,6 +99,13 @@ export default createStore({
 
       }).then((evolutionChain)=>{
         commit('evolutionInfo',evolutionChain);
+        return fetch(state.pokemonSpecies.generation.url);
+
+      }).then((response)=>{
+        return response.json();
+
+      }).then((regionInfo)=>{
+        commit('region',regionInfo.main_region.name);
 
       }).catch((error) => {
         console.log(error);
