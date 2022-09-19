@@ -31,10 +31,12 @@
   <span>Entry: {{$store.getters.entryEsp}} </span><br>
   <span>Nickname: {{$store.getters.nicknameEsp}} </span><br>
   <span>Regíon: {{$store.getters.regionInfo}} </span><br>
-  <li v-for="evol in $store.getters.evolutionChain">
+  <li v-for="evol in $store.getters.variants">
+      <span v-for="variant in evol"><span>{{variant}}</span><br></span>
+  </li> 
+  <li v-for="evol in $store.state.allVariantsUrl">
       <span v-for="variant in evol"><span>{{variant}} </span><br></span>
-    </li> 
-  
+  </li> 
 </template>
 
 <script>
@@ -58,8 +60,6 @@ export default {
     getInfo(){
       let urlPokemon=`https://pokeapi.co/api/v2/pokemon/${this.pokemon}`;
       this.$store.dispatch('fetchUrl',urlPokemon);
-
-      
     },
     
   },
